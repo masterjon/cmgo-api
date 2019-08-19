@@ -1,0 +1,10 @@
+.DS_Store
+*.pyc
+*.pyo
+secrets.json
+manage.py
+/comego/media/
+/static/
+comego/api/migrations/*
+api/migrations/*
+db.sqlite3
