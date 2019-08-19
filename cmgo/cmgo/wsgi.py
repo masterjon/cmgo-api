@@ -11,6 +11,10 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cmgo.settings')
+
+#os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cmgo.settings')
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cmgo.settings.production')
+#>>>>>>> 8b50b85abed49d24af751f750fba8393fda24876
 
 application = get_wsgi_application()
