@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+# from rest_framework.generics import ListAPIView
+# from django.db.models import Count
 
-# Create your views here.
+from . import serializers, models
+
+
+class SlideViewSet(ModelViewSet):
+    queryset = models.Slide.objects.all()
+    serializer_class = serializers.SlideSerializer

@@ -15,11 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import include
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+
+# API
+api_patterns = [
+    re_path(r'^', include('api.urls')),
+]
+
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('api/v1/', include(api_patterns)),
     path('admin/', admin.site.urls),
 
 ]
