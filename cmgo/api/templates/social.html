@@ -1,0 +1,122 @@
+{% load staticfiles %}
+{% load thumbnail %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                {% for post in posts %}
+                  <div class="card mb-3 item-post post-{{forloop.counter}}  post-type-{{post.type}}  {% if post.type == "facebook" %}post-{{post.id}}{% endif %}">
+                  <div class="{{post.type}}" data-category="">
+                     {% if post.type == "facebook" %}
+                     <!--div id="canvasloader-container-{{post.id}}" class="canvasloader-container"></div-->
+                     <div class="image ">
+                        <img class="card-img-top img-fluid" src="http://placehold.it/300x300" alt="default image" />
+                     </div>
+                     <div class="caption card-body">
+                        <p class="message card-text">{{post.message}}</p>
+                     </div>
+                     {% else %}
+                        {% if post.image %}
+                              {% thumbnail post.image "500x500" crop="center" as  thumb %}
+                                 <img src="{{thumb.url}}" alt="{{post.caption}}" class="img-fluid first-img-fb" />
+                              {% endthumbnail %}
+                              <div class="caption">
+                                 {% if post.type == "facebook" %}
+                                    <p class="message">{{post.message}}</p>
+                                 {% elif post.type == 'tweet' %}
+                                    <div class="col-sm-12">
+                                       <p class="message"><span class="user-name-twitter">@{{post.user.name}}</span>{{post.text}}</p>
+                                    </div>
+                                 {% else %}
+                                    <p class="message">{{post.text}}</p>
+                                 {% endif %}
+                              </div>
+                        {% endif%}
+
+                     {% endif %}
+                     <!--div class="share">
+                        <div class="share-options" style="display:none;">
+                           <div class="tooltipster-content">
+                              <ul class="share-options-menu-list">
+                                 <li>
+                                    <a class="post-share-tw-a" href="https://twitter.com/intent/tweet?url={{post.link_encoded}}&amp;text={{post.text_encoded}}" onclick="ga('send', 'event', 'Share Facebook', 'Click','{{post.link}}'); return !window.open(this.href, 'Twitter', 'width=665,height=300')" target="_blank">
+                                    <span class="icon-twitter icon">
+                                    <span class="network-name">TWITTER</span>
+                                    </a>
+                                 </li>
+                                 <li>
+                                    <a data-text-encoded="{{post.text_encoded}}" class="post-share-fb-a" href="http://www.facebook.com/sharer.php?u={{post.link_encoded}}&amp;t={{post.text_encoded}}" onclick=" ga('send', 'event', 'Share Facebook', 'Click', '{{post.link}}');  return !window.open(this.href, 'Facebook', 'width=665,height=300')" target="_blank">
+                                    <span class="icon-facebook icon">
+                                    <span class="network-name">FACEBOOK</span>
+                                    </a>
+                                 </li>
+                              </ul>
+                           </div>
+                        </div>
+                        <span class="icon-share action-share"> <span>{{post.type}} COMPARTIR</span>
+                        </span>
+                     </div-->
+                  </div>
+               </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% csrf_token %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+<script>
+
+var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
+
+    function getpost(post_id){
+       var data= {csrfmiddlewaretoken: csrftoken,post_id:post_id};
+       $.ajax("{% url 'get-picture-facebook' %}",{
+         data:data,
+         type:'post',
+         cache:false,
+         dataType:'json',
+         timeout:20000,
+         success: function(json){
+             if(json != "fail"){
+                 $('.post-'+post_id+" .image").html('<img src="'+ json["picture"] +'" alt="" class="img-fluid second-img-fb" />').fadeIn(1500);
+                 var text_encoded = $('.post-'+post_id+" .post-share-fb-a").attr("data-text-encoded");
+                 $('.post-'+post_id+" .post-share-fb-a").attr("href", "http://www.facebook.com/sharer.php?u="+json["link"]+"&t="+text_encoded);
+                 $('.post-'+post_id+" .post-share-tw-a").attr("href", "https://twitter.com/intent/tweet?u="+json["link"]+"&text="+text_encoded);
+             }
+           },
+           error:function(jqXHR,textStatus,errorThrown){
+               console.log(jqXHR+textStatus+errorThrown)
+           }
+       });
+   }
+   {% for post in posts %}
+     {% if post.type == "facebook" %}
+         // loadcanvas('{{post.id}}');
+         getpost('{{post.id}}');
+     {% endif %}
+   {% endfor %}
+</script>
+  </body>
+</html>
