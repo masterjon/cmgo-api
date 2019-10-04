@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static from staticfiles %}
 {% load thumbnail %}
 <!doctype html>
 <html lang="en">
@@ -20,11 +20,13 @@
                   <div class="{{post.type}}" data-category="">
                      {% if post.type == "facebook" %}
                      <!--div id="canvasloader-container-{{post.id}}" class="canvasloader-container"></div-->
-                     <div class="image ">
+                     <span style="position: absolute; margin: 15px; width: 50px;"><img src="{% static 'api/image/FB.png' %}" width="38" ></span>
+                     <div class="image">
                         <img class="card-img-top img-fluid" src="http://placehold.it/300x300" alt="default image" />
                      </div>
                      <div class="caption card-body">
-                        <p class="message card-text">{{post.message}}</p>
+                        <p class="mt-3 message card-text">{{post.message}}</p>
+                        <p class="text-center"><a class="post-more" target="_blank">Ver más</a></p>
                      </div>
                      {% else %}
                         {% if post.image %}
@@ -36,10 +38,14 @@
                                     <p class="message">{{post.message}}</p>
                                  {% elif post.type == 'tweet' %}
                                     <div class="col-sm-12">
-                                       <p class="message"><span class="user-name-twitter">@{{post.user.name}}</span>{{post.text}}</p>
+                                       <p class="message">
+                                        <span class="user-name-twitter">@{{post.user.name}}</span>
+                                        {{post.text}}
+                                        </p>
                                     </div>
                                  {% else %}
                                     <p class="message">{{post.text}}</p>
+
                                  {% endif %}
                               </div>
                         {% endif%}
@@ -103,7 +109,7 @@ var csrftoken = $("input[name='csrfmiddlewaretoken']").val();
                  $('.post-'+post_id+" .image").html('<img src="'+ json["picture"] +'" alt="" class="img-fluid second-img-fb" />').fadeIn(1500);
                  var text_encoded = $('.post-'+post_id+" .post-share-fb-a").attr("data-text-encoded");
                  $('.post-'+post_id+" .post-share-fb-a").attr("href", "http://www.facebook.com/sharer.php?u="+json["link"]+"&t="+text_encoded);
-                 $('.post-'+post_id+" .post-share-tw-a").attr("href", "https://twitter.com/intent/tweet?u="+json["link"]+"&text="+text_encoded);
+                 $('.post-'+post_id+" .post-more").attr("href", json["link"]);
              }
            },
            error:function(jqXHR,textStatus,errorThrown){

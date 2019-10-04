@@ -21,6 +21,9 @@ class SlideImage(models.Model):
         ordering = ['ordering']
 
 
+
+
+
 # class Event(models.Model):
 #     number = models.PositiveIntegerField('Número')
 #     title = models.CharField('Título', max_length=100)

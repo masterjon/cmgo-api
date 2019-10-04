@@ -12,7 +12,7 @@ from django.http import HttpResponse
 
 from . import serializers, models
 PLACEHOLDER_IMG = "http://placehold.it/300x300"
-EXTENDED_TOKEN_FACEBOOK = "EAAGAhk69Nm8BADNBa9d9LdACBHL1wtCHyvSKzSTbAOltGvGoMZBxpFitQWdPxZB00vz3tYZBl5ecGNNusJVA4ZCYQazCXyBoMAOEKvirpeWZCuhAZCOxEbq2ubFW7OqzsduO5xvL3qHDPE2Orw5pjqZBJMxDRPe1RFRJvZAyLur2AZCTOpobtY4ZAMTumZBBhfMX6sZD"
+EXTENDED_TOKEN_FACEBOOK = "EAAGAhk69Nm8BAMThqoV8sjGdeNs4ALgjGzdmpQaLin1g88VRZAb2CsXVTSmo6mnZBZAmNQvU2OxYdoqkiNvuYR4mDsOlEEsR0EdbtsWmEoXj2Y3nmbwidFukao4xY7ZCoLqT9drbZAHGg8GW4ZBfKvTEqACVlwoS7eY5EDsPHIV557aQOGBkGitJes3nvU9y4ZD"
 
 
 class SlideViewSet(ModelViewSet):
@@ -78,7 +78,7 @@ def get_picture_facebook(request):
         if 'full_picture' in r_json:
             full_picture = r_json["full_picture"]
         if 'permalink_url' in r_json:
-            link = parse.quote_plus(str(r_json["permalink_url"]))
+            link = str(r_json["permalink_url"])
 
         data = {"id": post_id, "picture": full_picture, "link": link}
         print(data)
