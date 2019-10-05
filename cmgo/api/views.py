@@ -98,7 +98,7 @@ def feed_twitter(count):
                     "created_time": t.created_at,
                     "link": "https://twitter.com/" + CONST_USER_TWITTER + "/status/" + str(t.id),
                     "link_encoded": parse.quote_plus("https://twitter.com/" + CONST_USER_TWITTER + "/status/" + str(t.id)),
-                    "user": {"name": t.user.name, "screen_name": "@" + t.user.screen_name, "profile_image": t.user.profile_image_url}
+                    "user": {"name": t.user.name, "screen_name": t.user.screen_name, "profile_image": t.user.profile_image_url}
                 }
                 print("-------------------------------------\n\n")
                
