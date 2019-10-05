@@ -12,6 +12,11 @@
 
   </head>
   <body>
+    <style>
+      a{
+        color:#009e49;
+      }
+    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-7">
@@ -29,50 +34,22 @@
                         <p class="text-center"><a class="post-more" target="_blank">Ver más</a></p>
                      </div>
                      {% else %}
+                        <span style="position: absolute; margin: 15px; width: 50px;right:0px;"><img src="{% static 'api/image/TW.png' %}" width="38" style="float:right" ></span>
                         {% if post.image %}
-                              {% thumbnail post.image "500x500" crop="center" as  thumb %}
-                                 <img src="{{thumb.url}}" alt="{{post.caption}}" class="img-fluid first-img-fb" />
-                              {% endthumbnail %}
-                              <div class="caption">
-                                 {% if post.type == "facebook" %}
-                                    <p class="message">{{post.message}}</p>
-                                 {% elif post.type == 'tweet' %}
-                                    <div class="col-sm-12">
-                                       <p class="message">
-                                        <span class="user-name-twitter">@{{post.user.name}}</span>
-                                        {{post.text}}
-                                        </p>
-                                    </div>
-                                 {% else %}
-                                    <p class="message">{{post.text}}</p>
-
-                                 {% endif %}
+                              <div class="image">
+                                 <img src="{{post.image}}" alt="{{post.caption}}" class="card-img-top img-fluid" />
                               </div>
+                        {% else %}
+                          <div><br></div>
                         {% endif%}
+                        <div class="caption card-body">
+                                  <a href="https://twitter.com/@{{post.user.name}}" target="_blank">@{{post.user.name}}</a>
+                                  <p class="message">
+                                        {{post.text}}</p>
+                                  <p class="text-center"><a class="post-more" href="{{post.link}}" target="_blank">Ver más</a></p>
+                              </div>
 
                      {% endif %}
-                     <!--div class="share">
-                        <div class="share-options" style="display:none;">
-                           <div class="tooltipster-content">
-                              <ul class="share-options-menu-list">
-                                 <li>
-                                    <a class="post-share-tw-a" href="https://twitter.com/intent/tweet?url={{post.link_encoded}}&amp;text={{post.text_encoded}}" onclick="ga('send', 'event', 'Share Facebook', 'Click','{{post.link}}'); return !window.open(this.href, 'Twitter', 'width=665,height=300')" target="_blank">
-                                    <span class="icon-twitter icon">
-                                    <span class="network-name">TWITTER</span>
-                                    </a>
-                                 </li>
-                                 <li>
-                                    <a data-text-encoded="{{post.text_encoded}}" class="post-share-fb-a" href="http://www.facebook.com/sharer.php?u={{post.link_encoded}}&amp;t={{post.text_encoded}}" onclick=" ga('send', 'event', 'Share Facebook', 'Click', '{{post.link}}');  return !window.open(this.href, 'Facebook', 'width=665,height=300')" target="_blank">
-                                    <span class="icon-facebook icon">
-                                    <span class="network-name">FACEBOOK</span>
-                                    </a>
-                                 </li>
-                              </ul>
-                           </div>
-                        </div>
-                        <span class="icon-share action-share"> <span>{{post.type}} COMPARTIR</span>
-                        </span>
-                     </div-->
                   </div>
                </div>
             {% endfor %}
