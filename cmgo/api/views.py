@@ -6,7 +6,7 @@ from urllib import parse
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from django.views.generic import TemplateView
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from tweepy import OAuthHandler
 from tweepy import API
@@ -136,3 +136,45 @@ def get_picture_facebook(request):
         data = {"id": post_id, "picture": full_picture, "link": link}
         
     return HttpResponse(dumps(data), 'application/json')
+
+
+
+
+def facebook_callback(request):
+    code = request.GET.get('code')
+    APP_ID = '422789311706735'
+    APP_SECRET = '5a3eeec7c2a89adab4e2b14c4e093132'
+
+    if not code:
+        return JsonResponse({'error': 'No code provided'}, status=400)
+
+    # Paso 1: Intercambiar el code por un short-lived token
+    token_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
+    params = {
+        'client_id': APP_ID,
+        'redirect_uri': 'http://localhost:8000/facebook/callback/',  # debe coincidir con el registrado
+        'client_secret': APP_SECRET,
+        'code': code,
+    }
+
+    r = requests.get(token_url, params=params)
+    data = r.json()
+
+    if 'access_token' not in data:
+        return JsonResponse({'error': 'No access token in response', 'response': data}, status=400)
+
+    short_lived_token = data['access_token']
+
+    # Paso 2: Intercambiarlo por un long-lived token
+    extend_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
+    params = {
+        'grant_type': 'fb_exchange_token',
+        'client_id': APP_ID,
+        'client_secret': APP_SECRET,
+        'fb_exchange_token': short_lived_token,
+    }
+
+    r = requests.get(extend_url, params=params)
+    extended_data = r.json()
+
+    return JsonResponse(extended_data)

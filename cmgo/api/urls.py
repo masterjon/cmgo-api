@@ -20,6 +20,7 @@ urlpatterns = [
     re_path(r'^', include(router.urls)),
     path('social/', views.Social.as_view(), name="social"),
     path('get-picture-facebook/', views.get_picture_facebook, name='get-picture-facebook'),
+    path('facebook/callback/', views.facebook_callback, name='facebook_callback'),
     # url(r'activity_dates', views.ActivityDatesViewSet.as_view())
     # url(r'^', include(category_router.urls)),
     # url(r'^related-animals/$', views.RelatedAnimalsView.as_view(), name='related_animals'),
